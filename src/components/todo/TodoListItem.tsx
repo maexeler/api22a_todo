@@ -11,7 +11,8 @@ interface TodoListItemProps {
 const TodoListItem: React.FC<TodoListItemProps> = ({todo}) => {
     const toggle = 
         useStoreActions((actions)=>actions.todoModel.toggleCompleted)
-        
+    const deleteTodo = 
+        useStoreActions((actions)=>actions.todoModel.delete)
     return (
         <ListItem key={todo.id} >
             <ListItemIcon>
@@ -27,7 +28,7 @@ const TodoListItem: React.FC<TodoListItemProps> = ({todo}) => {
 
             <ListItemSecondaryAction>
                 <IconButton 
-                    onClick={()=>{console.log("delete")}}
+                    onClick={()=>{deleteTodo(todo)}}
                 >
                     <DeleteForeverIcon />
                 </IconButton>
