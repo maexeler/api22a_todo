@@ -1,6 +1,8 @@
+import TodoList from "./TodoList"
+
 const TodoPage: React.FC = () => {
     return (
-        <h3>Todo Body</h3>
+        <TodoList/>
     )
 }
 
