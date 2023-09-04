@@ -2,7 +2,8 @@ import { Checkbox, IconButton, ListItem, ListItemButton, ListItemIcon, ListItemS
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 
 import Todo from "../../model/Todo"
-import { useStoreActions } from "../../store/StoreModel";
+import { useStoreActions, useStoreState } from "../../store/StoreModel";
+import { act } from "@testing-library/react";
 
 interface TodoListItemProps {
     todo: Todo
@@ -13,8 +14,16 @@ const TodoListItem: React.FC<TodoListItemProps> = ({todo}) => {
         useStoreActions((actions)=>actions.todoModel.toggleCompleted)
     const deleteTodo = 
         useStoreActions((actions)=>actions.todoModel.delete)
+    
+    const selectTodoFuction =
+        useStoreActions((actions)=>actions.todoModel.selectTodo)
+    const selectedTodo = 
+        useStoreState((state)=>state.todoModel.selectedTodo)
     return (
-        <ListItem key={todo.id} >
+        <ListItem key={todo.id} 
+            onClick={()=>{selectTodoFuction(todo)}}
+            selected={todo == selectedTodo}
+        >
             <ListItemIcon>
                 <Checkbox
                     checked={todo.completed} 
