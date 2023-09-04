@@ -5,8 +5,11 @@ import PageNotFoundPage from "./components/page_not_found/PageNotFoundPage"
 import AboutPage from "./components/about/AboutPage"
 
 import { useLocation } from "react-router-dom"
+import useTodoInitDataHook from "./model/todo_data_init_hook"
 
 const TodoApp: React.FC = () => {
+    useTodoInitDataHook()
+    
     let body = <PageNotFoundPage />
     switch (useLocation().pathname) {
         case '/': body = <TodoPage />; break

@@ -1,13 +1,14 @@
 import { Action, Computed, Thunk, action, computed, thunk } from "easy-peasy";
 import Todo from "./Todo";
 import todoService from "../service/impl/TodoFakeService"
+// import todoService from "../service/impl/TodoRestService"
 
 interface TodoModel {
     todos: Todo[]
 
 
     // Thunks async
-    initData: Thunk<TodoModel, Todo[]>
+    initData: Thunk<TodoModel>
     toggleCompleted: Thunk<TodoModel, Todo>
     delete: Thunk<TodoModel, Todo>
 
@@ -54,13 +55,13 @@ const todoModel: TodoModel = {
 
     _delete: action((state, todo) => {
         state.todos = state.todos.filter(
-            (element) => { return element.id != todo.id; }
+            (element) => { return element.id !== todo.id; }
         );
     }),
     
-    initData: thunk(async (actions, todos: Todo[])=>{
+    initData: thunk(async (actions)=>{
         await todoService.readAll().then(
-            () => { actions._initData(todos) }
+            (todos: Todo[]) => { actions._initData(todos) }
         )
     }),
 

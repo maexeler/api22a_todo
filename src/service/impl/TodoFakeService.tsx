@@ -38,7 +38,7 @@ class FakeTodoService implements TodoService {
 
     delete(todo: Todo): Promise<null> {
         this._todos = this._todos.filter(
-             (element)=>{return element.id != todo.id}
+             (element)=>{return element.id !== todo.id}
         )
         return new Promise( (ok, error) => {
             setTimeout(()=>{ok(null)}, 100)
