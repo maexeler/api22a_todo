@@ -1,58 +1,72 @@
 import { Action, Computed, Thunk, action, computed, thunk } from "easy-peasy";
-import fake_todos from "../fake_data/todo_data";
 import Todo from "./Todo";
 import todoService from "../service/impl/TodoFakeService"
 
 interface TodoModel {
     todos: Todo[]
 
-    todosTodo: Computed<TodoModel, number>
 
+    // Thunks async
+    initData: Thunk<TodoModel, Todo[]>
     toggleCompleted: Thunk<TodoModel, Todo>
     delete: Thunk<TodoModel, Todo>
 
+    // Action synchron
     _replaceTodo: Action<TodoModel, Todo>
     _delete: Action<TodoModel, Todo>
+    _initData: Action<TodoModel, Todo[]>
+
+    // view state Computed
+    todosTodo: Computed<TodoModel, number>
 }
 
 export default TodoModel
 
 const todoModel: TodoModel = {
-    todos: fake_todos, // TODO []
+    todos: [],
 
-    todosTodo: computed((state)=>{
-        const counter = (sum: number, todo: Todo): number => sum + (todo.completed ? 0 : 1)
-        return state.todos.reduce(counter, 0)
+    todosTodo: computed((state) => {
+        const counter = (sum: number, todo: Todo): number => sum + (todo.completed ? 0 : 1);
+        return state.todos.reduce(counter, 0);
     }),
 
     toggleCompleted: thunk(async (actions, todo: Todo) => {
-        todo.completed = !todo.completed
+        todo.completed = !todo.completed;
         await todoService.update(todo).then(
-            (todo: Todo) => {actions._replaceTodo(todo)}
-        )
+            (todo: Todo) => { actions._replaceTodo(todo); }
+        );
     }),
 
-    delete: thunk(async (actions, todo: Todo)=>{
+    delete: thunk(async (actions, todo: Todo) => {
         await todoService.delete(todo).then(
-            () => { actions._delete(todo)}
-        )
+            () => { actions._delete(todo); }
+        );
     }),
 
     _replaceTodo: action(
         (state, todo) => {
             state.todos.forEach((element, idx) => {
                 if (todo.id === element.id) {
-                    state.todos[idx] = {...todo}
+                    state.todos[idx] = { ...todo };
                 }
-            })
+            });
+        }),
+
+    _delete: action((state, todo) => {
+        state.todos = state.todos.filter(
+            (element) => { return element.id != todo.id; }
+        );
+    }),
+    
+    initData: thunk(async (actions, todos: Todo[])=>{
+        await todoService.readAll().then(
+            () => { actions._initData(todos) }
+        )
     }),
 
-    _delete: action((state, todo)=>{
-        state.todos = state.todos.filter(
-            (element)=>{return element.id != todo.id}
-       )
+    _initData: action((state, todos: Todo[])=>{
+        state.todos = todos
     })
-
 }
 
 export {todoModel}

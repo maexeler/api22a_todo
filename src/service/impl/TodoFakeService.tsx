@@ -21,6 +21,7 @@ class FakeTodoService implements TodoService {
     }
     readAll(): Promise<Todo[]> {
         return new Promise( (ok, error) => {
+            this._todos = fake_todos
             setTimeout(()=>{ok(this._todos)}, 1000)
         })
     }
