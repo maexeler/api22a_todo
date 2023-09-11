@@ -1,8 +1,14 @@
 import { Grid, Typography } from "@mui/material"
 import TodoForm from "./TodoForm"
 import { useStoreState } from "../../store/StoreModel"
+import TodoImpl from "../../model/TodoImpl"
+import Todo from "../../model/Todo"
 
-const EditTodo: React.FC = () => {
+interface EditTodoProps {
+    todo: Todo,
+    submitFkt(todo: Todo): void
+}
+const EditTodo: React.FC<EditTodoProps> = (props) => {
     const selectedTodo = 
         useStoreState((state)=>state.todoModel.selectedTodo)
     return (
@@ -13,7 +19,12 @@ const EditTodo: React.FC = () => {
                 </Typography>
             </Grid>
             <Grid item >
-                <TodoForm />
+            <TodoForm 
+                    todo={props.todo}
+                    submitFunction={ props.submitFkt }
+                    submitText='Edit ToDo'
+                    resetFormAfterSubmit={true}
+                />
             </Grid>
         </Grid>
     )
